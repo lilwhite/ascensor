@@ -1,2 +1,2 @@
 # Pytest is a testing framework for Python
-pytest
+pytest>=6.2.5

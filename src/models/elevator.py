@@ -10,6 +10,8 @@ class Elevator:
         self.requests = []                          # Lista de pisos solicitados
         self.is_moving = False                      # Indica si el ascensor está en movimiento
         self.door_open = False                      # Indica si la puerta está abierta
+        self.door_open_time = 0                     # Contador de tiempo para la puerta abierta
+        self.door_close_time = 0                    # Contador de tiempo para la puerta cerrada
         self.door_open_duration = 5                 # Duración de la apertura de la puerta
         self.door_close_duration = 3                # Duración del cierre de la puerta
         self.velocity = 1.0                         # Velocidad del ascensor (m/s)
@@ -91,33 +93,33 @@ class Elevator:
 
     def move(self, delta_time: float):
         """
-        Avanza la simulación delta_time en segundos.
+        Avanza la simulación delta_time segundos.
         Gestiona puertas y movimiento.
         """
-       # 1) Si las puertas están abiertas, contabiliza tiempo de apertura
+        # 1) Si las puertas están abiertas, contabiliza tiempo de apertura
         if self.door_open:
             self.door_open_time += delta_time
             if self.door_open_time >= self.door_open_duration:
                 self.close_doors()
             return
-        # 2) Si las puertas se están cerrand
-        
+
+        # 2) Si las puertas se están cerrando
         if not self.door_open and self.door_close_time < self.door_close_duration:
             self.door_close_time += delta_time
             if self.door_close_time >= self.door_close_duration:
                 self.is_moving = True
             return
-        
+
         # 3) Si no se está moviendo y hay peticiones, calculamos dirección
         if not self.is_moving:
             self.update_direction()
             if self.direction:
                 self.is_moving = True
-        
+
         # 4) Movimiento real
         if self.is_moving:
             distance = self.velocity * delta_time    # metros recorridos
-            floors_moved = distance / 3.0            # asumiendo 3 m/piso
+            floors_moved = distance / 3.0             # asumiendo 3 m/piso
 
             if self.direction == 'up':
                 self.current_floor += floors_moved

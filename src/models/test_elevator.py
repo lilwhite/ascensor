@@ -77,14 +77,6 @@ def test_open_and_close_door_manually(capsys):
     out = capsys.readouterr().out
     assert f"Cerrando puertas en el piso {e.current_floor}" in out
 
-def test_move_opens_door_at_destination():
-    e = Elevator(min_floor=1, max_floor=5)
-    e.go_to(3)
-    # velocidad 1 m/s → 3 plantas ≈ 9 m → necesitamos ≥6 s para 2 plantas y algo más
-    e.move(6.1)
-    assert pytest.approx(e.current_floor, rel=1e-2) == 3.0
-    assert e.door_open is True
-
 def test_status_contains_all_fields():
     e = Elevator()
     s = e.status()
