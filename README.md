@@ -67,91 +67,31 @@ ascensor/
       e.move_to_floor(3)
       assert e.current_floor == 3
 
-## 4. Flujo de trabajo detallado
 
-A continuación se describe paso a paso con ejemplos cómo empezar:
+## 4. 🧭 Flujo de trabajo detallado
 
-1. **Configurar el entorno de desarrollo**
-   - Crear un entorno virtual en la raíz del proyecto:
-     ```bash
-     python -m venv venv
-     source venv/bin/activate  # Linux/Mac
-     venv\Scripts\activate     # Windows
-     ```
-   - Crear el archivo `requirements.txt` con las dependencias mínimas:
-     ```txt
-     pytest
-     ```
-   - Instalar dependencias:
-     ```bash
-     pip install -r requirements.txt
-     ```
+1. **Inicialización del ascensor**  
+   Se crea una instancia de la clase `Elevator`, que contiene la lógica principal: piso actual, capacidad de carga, dirección, puertas, etc.
 
-2. **Definir las clases en `src/models/`**
-   - Crear `elevator.py`, `request.py` y `floor.py`.
-   - Ejemplo en `elevator.py`:
-     ```python
-     class Elevator:
-         def __init__(self, min_floor=1, max_floor=10):
-             self.current_floor = 1
-             self.doors_open = False
-     ```
-   - Añadir métodos básicos y documentar con docstrings.
+2. **Ejecución del controlador CLI**  
+   La clase `ElevatorCLI` gestiona la interacción con el usuario a través de la terminal. Utiliza la librería `rich` para mostrar el estado del ascensor de forma visual y estilizada.
 
-3. **Implementar el controlador (`src/controller/`)**
-   - Crear `controller.py` con funciones:
-     ```python
-     def move_to_floor(elevator, target_floor):
-         # lógica sencilla: actualizar current_floor
-         elevator.current_floor = target_floor
-     ```
-   - Agregar acciones de abrir/cerrar puertas:
-     ```python
-     def open_doors(elevator):
-         elevator.doors_open = True
-     ```
+3. **Entrada del usuario**  
+   El usuario introduce el piso de destino por consola. También puede salir del programa escribiendo `q`.
 
-4. **Desarrollar el planificador FCFS (First-Come, First-Served) (`src/scheduler/`)**
-   - En `scheduler.py`, mantener una cola de peticiones:
-     ```python
-     from collections import deque
+4. **Validación de entrada**  
+   El controlador comprueba si el piso introducido está dentro del rango permitido (`min_floor`, `max_floor`) y si es un número válido.
 
-     request_queue = deque()
+5. **Simulación de movimiento**  
+   Si el piso es válido, el controlador anima el desplazamiento del ascensor:
+   - Se muestra una flecha animada (`↑`, `⇡`, `⇧` o `↓`, `⇣`, `⇩`) según la dirección.
+   - El número de piso se actualiza dinámicamente durante el trayecto.
+   - Se imprime un mensaje al llegar al destino.
 
-     def add_request(request):
-         request_queue.append(request)
+6. **Actualización del estado interno**  
+   El piso actual (`current_floor`) se actualiza en la instancia del ascensor una vez completado el movimiento.
 
-     def get_next_request():
-         return request_queue.popleft() if request_queue else None
-     ```
-
-5. **Crear la CLI con `argparse` (`src/cli.py`)**
-   - Estructura básica:
-     ```python
-     import argparse
-     from models.elevator import Elevator
-
-     def main():
-         parser = argparse.ArgumentParser()
-         subparsers = parser.add_subparsers(dest='command')
-
-         call = subparsers.add_parser('call')
-         call.add_argument('floor', type=int)
-
-         # añadir más subcomandos...
-
-         args = parser.parse_args()
-         # lógica para cada comando
-
-     if __name__ == '__main__':
-         main()
-     ```
-
-6. **Escribir y ejecutar pruebas (`tests/`)**
-   - Crear archivos de prueba `test_elevator.py`, `test_scheduler.py`, etc.
-   - Ejecutar:
-     ```bash
-     pytest --maxfail=1 --disable-warnings -q
-     ```
+7. **Repetición del ciclo**  
+   El programa vuelve a solicitar entrada al usuario, repitiendo el flujo hasta que se indique salir.
 
 
