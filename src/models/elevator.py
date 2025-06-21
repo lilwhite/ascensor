@@ -27,6 +27,13 @@ class Elevator:
             return True
         return False
     
+    def externa_request_floor(self, floor: int):
+        """
+        Añade una petición externa de ir a `floor`.
+        Delegamos en request_floor para validación y encolado.
+        """
+        return self.request_floor(floor)
+    
     def go_to(self, floor: bool):
         """
         Añade una petición interna de ir a `floor`.

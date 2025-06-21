@@ -1,2 +1,7 @@
 # Pytest is a testing framework for Python
-pytest>=6.2.5
+pytest>=6.2.5 
+
+# Rich is a library for rich text and beautiful formatting in the terminal
+rich>=10.0.0
+
+
